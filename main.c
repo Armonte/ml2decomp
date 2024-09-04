@@ -148,7 +148,7 @@ int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
   isGameStarted = 0;
 
 
-
+  initGame();
   // Call LOL() function after window is shown
   LOL();
 
