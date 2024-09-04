@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "fileutils.h": "c",
+        "main.h": "c",
+        "commctrl.h": "c",
+        "windows.h": "c",
+        "anim.h": "c",
+        "game.h": "c",
+        "audio.h": "c",
+        "bitmap.h": "c",
+        "resource.h": "c",
+        "keyboardmanager.h": "c",
+        "mbstring.h": "c",
+        "joy.h": "c"
+    }
+}

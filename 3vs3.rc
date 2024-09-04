@@ -1,0 +1,286 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resrc1.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "resource.h"
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+7233 MENU DISCARDABLE 
+BEGIN
+    MENUITEM "KeyConfig",                   IDM_KEYCONFIG
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_BOOT DIALOG DISCARDABLE  0, 0, 334, 145
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Moon Lights 2"
+FONT 8, "Arial"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,228,125,50,14
+    GROUPBOX        "Window Settings",-1,12,12,154,40
+    CONTROL         "Fullscreen",IDC_FULLSCREEN,"Button",BS_AUTORADIOBUTTON,
+                    23,23,75,9
+    CONTROL         "Windowed",IDC_WINDOWED,"Button",BS_AUTORADIOBUTTON,23,
+                    36,75,9
+    GROUPBOX        "DirectX",-1,11,60,155,75
+    CONTROL         "Use DirectX",IDC_USE_DIRECTX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,21,69,70,10
+    LTEXT           " ",-1,19,81,142,26
+    LTEXT           " ",-1,19,106,144,27
+    PUSHBUTTON      "CANCEL",IDCANCEL,277,125,50,14
+    PUSHBUTTON      "Settings",IDC_SETTINGS,203,100,99,16
+    LTEXT           "http://www.bekkoame.or.jp/ro/morimoto",-1,196,26,119,9
+    GROUPBOX        "             click here for support          ",-1,174,
+                    15,155,22
+    EDITTEXT        IDC_EDIT1,177,74,120,14,ES_UPPERCASE | ES_AUTOHSCROLL | 
+                    ES_READONLY
+    PUSHBUTTON      ". . .",IDC_BUTTON1,302,73,27,15
+    LTEXT           "Path to LIGHTS2.NCD",-1,180,61,145,8
+END
+
+IDD_BOOT_DIRECTX_DISPLAY DIALOG DISCARDABLE  0, 0, 354, 129
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "DirectX Settings"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,299,108,50,14
+    CONTROL         "640x480",IDC_640X480,"Button",BS_AUTORADIOBUTTON,194,52,
+                    40,10
+    LTEXT           "DirectX Settings",-1,28,6,318,17
+    CONTROL         "320x240",IDC_320X240,"Button",BS_AUTORADIOBUTTON,194,39,
+                    40,10
+    GROUPBOX        "Resolution",-1,189,27,161,75
+    LTEXT           "Windows does not play nice with 240p, use 640x480",-1,
+                    193,66,158,41
+    GROUPBOX        "Picture",-1,2,27,185,29
+    CONTROL         "Scale game to full res",IDC_SCALE_GAME,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,39,94,10
+END
+
+IDD_BOOT_DIRECT_SOUND DIALOG DISCARDABLE  0, 0, 187, 137
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "DirectSound Settings"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,126,111,50,14
+    GROUPBOX        "DirectSound",-1,6,0,169,57
+    CONTROL         "Use DirectSound",IDC_USE_DIRECTSOUND,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,11,83,10
+    LTEXT           "DirectSound allows for multiple SFX to be played at once. Keep this on.",
+                    -1,12,24,160,27
+END
+
+IDD_BOOT_GAME_SPEED DIALOG DISCARDABLE  0, 0, 197, 85
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Configuring processing speed"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,135,65,50,14
+    LTEXT           "You can set the maximum number of frames of the animation when processing is dropped, how many frames to omit. (You can set a value from 2 to 32767) If the processing is dropped, the more frames to set here, the faster the game, but the rougher the animati??",
+                    -1,10,7,176,50
+    EDITTEXT        IDC_EDIT_FRAMESKIP,18,58,44,16,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "Spin1",IDC_SPIN_FRAMESKIP,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,56,58,11,14
+END
+
+IDD_BOOT_OPTION DIALOG DISCARDABLE  0, 0, 143, 170
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Moon Lights 2 Settings"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,80,104,50,14
+    PUSHBUTTON      "Input and Keybind Settings",IDC_KEYBIND_SETTINGS,8,5,
+                    115,14
+    PUSHBUTTON      "DirectSound Settings",IDC_DIRECTSOUND_SETTINGS,8,21,115,
+                    14
+    PUSHBUTTON      "DirectX Display Options",IDC_DIRECTX_DISPLAY_SETTINGS,8,
+                    54,114,14
+    PUSHBUTTON      "Frameskip Settings",IDC_FRAMESKIP_SETTINGS,8,70,114,14
+    PUSHBUTTON      "Game Speed",IDC_GAME_SPEED_SETTINGS,8,86,114,14
+    PUSHBUTTON      "Sound Settings",IDC_SOUND_SETTINGS,8,37,115,14
+END
+
+IDD_BOOT_SOUND DIALOG DISCARDABLE  0, 0, 171, 127
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Sound Settings"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,111,103,50,14
+    CONTROL         "Play BGM",IDC_PLAY_BGM,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,12,55,10
+    CONTROL         "Play SFX",IDC_PLAY_SFX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,26,62,10
+    CONTROL         "Slider2",IDC_SLIDER_SFX_VOLUME,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,32,55,100,15
+    LTEXT           "low",-1,19,59,14,8
+    LTEXT           "high",-1,134,60,14,8
+    LTEXT           "These settings only affect DirectSound",-1,18,79,127,9
+    GROUPBOX        "SFX Volume",-1,14,45,136,47
+END
+
+IDD_BOOT_SPEED DIALOG DISCARDABLE  0, 0, 155, 91
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Configure Game Speed"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,94,69,50,14
+    LTEXT           "Game Speed Settings:",-1,10,8,104,8
+    CONTROL         "VERY SLOW SPEED",IDC_VERY_SLOW_SPEED,"Button",
+                    BS_AUTORADIOBUTTON,19,19,75,10
+    CONTROL         "SLOW SPEED",IDC_SLOW_SPEED,"Button",BS_AUTORADIOBUTTON,
+                    19,31,56,10
+    CONTROL         "NORMAL SPEED",IDC_NORMAL_SPEED,"Button",
+                    BS_AUTORADIOBUTTON,19,43,66,10
+    CONTROL         "HIGH SPEED",IDC_HIGH_SPEED,"Button",BS_AUTORADIOBUTTON,
+                    19,56,54,10
+    CONTROL         "VERY HIGH SPEED",IDC_VERY_HIGH_SPEED,"Button",
+                    BS_AUTORADIOBUTTON,19,68,74,10
+END
+
+IDD_KEYCONFIG DIALOGEX 0, 0, 339, 167
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_MODALFRAME | DS_SETFOREGROUND | 
+    DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "KeyConfig"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "OK",IDOK,279,146,50,14
+    GROUPBOX        "PLAYER1",-1,7,7,158,132
+    COMBOBOX        IDC_COMBO_P1_JOYSTICK,82,17,78,35,CBS_DROPDOWN | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Assign Joystick",-1,14,19,66,10
+    CONTROL         "",IDC_HOTKEY_P1_UP,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,42,52,21,13
+    LTEXT           "UP",-1,47,44,10,8
+    LTEXT           "LEFT",-1,15,70,16,8
+    LTEXT           "DOWN",-1,43,96,20,8
+    LTEXT           "RIGHT",-1,77,69,20,8
+    LTEXT           "A",-1,102,73,8,8
+    LTEXT           "B",-1,124,73,8,8
+    GROUPBOX        "Key Assignment",-1,12,36,147,85
+    GROUPBOX        "PLAYER2",-1,171,8,158,131
+    LTEXT           "Assign Joystick",-1,177,20,66,10
+    CONTROL         "Use Keyboard",IDC_P2_USE_KEYBOARD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,180,106,79,10
+    GROUPBOX        "Key Assignment",-1,175,36,147,85
+    CONTROL         "Use Keyboard",IDC_P1_USE_KEYBOARD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,18,106,79,10
+    CONTROL         "",IDC_HOTKEY_P1_LEFT,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,31,67,21,13
+    CONTROL         "",IDC_HOTKEY_P1_RIGHT,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,54,67,21,13
+    CONTROL         "",IDC_HOTKEY_P1_DOWN,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,44,82,21,13
+    CONTROL         "",IDC_HOTKEY_P1_A,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,94,82,21,13
+    CONTROL         "",IDC_HOTKEY_P1_B,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,117,82,21,13
+    CONTROL         "",IDC_HOTKEY_P2_UP,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,204,52,21,13
+    LTEXT           "DOWN",-1,204,96,20,8
+    LTEXT           "RIGHT",-1,238,70,20,8
+    LTEXT           "A",-1,264,74,8,8
+    LTEXT           "B",-1,285,74,8,8
+    CONTROL         "",IDC_HOTKEY_P2_LEFT,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,192,68,21,13
+    CONTROL         "",IDC_HOTKEY_P2_RIGHT,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,216,68,21,13
+    CONTROL         "",IDC_HOTKEY_P2_DOWN,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,205,82,21,13
+    CONTROL         "",IDC_HOTKEY_P2_A,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,256,82,21,13
+    CONTROL         "",IDC_HOTKEY_P2_B,"msctls_hotkey32",WS_BORDER | 
+                    WS_TABSTOP,281,81,21,13
+    LTEXT           "LEFT",-1,176,71,15,8
+    LTEXT           "UP",-1,210,44,8,8
+    COMBOBOX        IDC_COMBO_P2_JOYSTICK,244,17,78,35,CBS_DROPDOWN | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Set A button to Light Attack & B button to Medium Attack",
+                    IDC_P1_BUTTON_CONFIG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,11,126,153,10
+    CONTROL         "Set A button to Light Attack & B button to Medium Attack",
+                    IDC_P2_BUTTON_CONFIG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,176,125,153,10
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resrc1.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""resource.h""\r\n"
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
