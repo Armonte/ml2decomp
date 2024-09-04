@@ -62,7 +62,6 @@
 #define IDC_DIRECTSOUND_ON              1045
 #define IDC_DIRECTSOUND_OFF             1046
 
-// Add these new identifiers to your resource.h file
 
 #define IDC_SCREEN_RESOLUTION_ON        1047
 #define IDC_SCREEN_RESOLUTION_OFF       1048

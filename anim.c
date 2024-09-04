@@ -3,6 +3,7 @@
 #include <string.h>
 #include "main.h"
 #include "game.h"
+
 #include "anim.h" // Add this line to include the anim.h header
 
 // Update these definitions to match the declarations in anim.h
@@ -14,7 +15,7 @@ int g_frameCount = 0;
 
 // Remove redundant global variable declarations
 // Keep only the ones not declared in anim.h
-unsigned int dword_4C0790;
+unsigned int maxPixelCount;
 
 // Global variable declarations
 HWND g_animationWindow;
@@ -23,6 +24,77 @@ void *g_bitsBuffer;
 int g_maxScreenWidth;
 int g_maxScreenHeight;
 int nBitCount;
+
+int MessageHandlingLoop()
+{
+  MSG Msg;
+
+  while ( PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE) )
+  {
+    if ( !GetMessage(&Msg, NULL, 0, 0) ) 
+    {
+      PostQuitMessage(Msg.wParam); 
+      return 0; 
+    }
+    TranslateMessage(&Msg); 
+    DispatchMessage(&Msg); 
+  }
+  return 0; 
+}
+
+int DecrementAndResetTimer()
+{
+  int timerDivisionRemaining; // edx
+
+  if ( !g_isTimerDivisionActive )
+    return -1;
+
+  timerDivisionRemaining = g_timerDivisionFactor - 1;
+  g_timercurrentValue -= g_timerDividedValue;
+
+  if ( g_timercurrentValue < 0 )
+    g_timercurrentValue = 0;
+
+  --g_timerDivisionFactor;
+
+  if ( !timerDivisionRemaining )
+    resetGlobalVariables();
+
+  return 0;
+}
+
+int UpdateAnimations() //add decl
+{
+  int result; // eax
+
+  if ( !g_bitDepth || !g_animationState )
+    return -1;
+
+  if ( g_isReverse )
+  {
+    if ( g_currentFrame <= 0 )
+    {
+      DisableAnimation();
+      return -1;
+    }
+  }
+  else if ( g_currentFrame >= g_totalFrames )
+  {
+    ClearGlobalAnimControl();
+    return -1;
+  }
+
+  UpdateAnimationState(2);
+  result = 0;
+
+  // Ensure proper increment/decrement based on the direction of animation
+  if ( g_isReverse )
+    --g_currentFrame;
+  else
+    ++g_currentFrame;
+
+  return result; // Return 0 to indicate success
+}
 
 int __stdcall UpdateAnimationState(int pixelSize)
 {
@@ -186,6 +258,21 @@ int InitAnimParams(int frameCount, char isReverse, int totalFrames)
   return 0;
 }
 
+int DisableAnimation()
+{
+  int result; // eax
+
+  if ( !g_bitDepth )
+    return -1;
+  result = 0;
+  g_animationState = 0;
+  g_frameCount = 0;
+  g_isReverse = 0;
+  g_totalFrames = 0;
+  g_currentFrame = 0;
+  return result;
+}
+
 void *InitAnimationControl(HWND hwnd, int width, int height, int bitDepth)
 {
   size_t bufferSize;
@@ -214,7 +301,7 @@ void *InitAnimationControl(HWND hwnd, int width, int height, int bitDepth)
   if ( g_bitsBuffer )
     free(g_bitsBuffer);
   g_bitsBuffer = bitsBuffer;
-  dword_4C0790 = tempSize;
+  maxPixelCount = tempSize;
   g_maxScreenWidth = width;
   result = g_bitDepth;
   g_maxScreenHeight = height;

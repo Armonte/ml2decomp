@@ -1,14 +1,16 @@
 #include <windows.h>
 #include <commctrl.h>
+#include <stdio.h>
+#include "reg.h"
 #include "FileUtils.h"
 #include "main.h"
 #include "game.h"
-#include "resource.h"
-#include <stdio.h>
+#include "winresource.h"
+#include <shlobj.h>
 
 // Declare the missing variables
 char szClass[] = "Moon Lights 2";
-char FullPath[256];
+char FullPath[260];
 char byte_687861[3]; // Assuming this is a 3-character array based on usage
 int isFullscreen = 0;
 int ResourceHandlerState = 0;
@@ -36,7 +38,33 @@ int settings_sound_effects = 0;
 int dword_439884 = 0;
 int dword_439880 = 0;
 
+GameSettings g_gameSettings;
+
+#pragma comment(lib, "shell32.lib")
 #pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "ole32.lib")  // For CoTaskMemFree
+
+int BrowseAndSetFolderPath(HWND hwndParent, char* folderPathBuffer)
+{
+    BROWSEINFO bi = {0};
+    LPITEMIDLIST pidl;
+    
+    bi.hwndOwner = hwndParent;
+    bi.pszDisplayName = folderPathBuffer;
+    bi.lpszTitle = "Select a folder";
+    bi.ulFlags = BIF_RETURNONLYFSDIRS;
+
+    pidl = SHBrowseForFolder(&bi);
+    
+    if (pidl != NULL)
+    {
+        SHGetPathFromIDList(pidl, folderPathBuffer);
+        CoTaskMemFree(pidl);
+        return 0;
+    }
+    
+    return -1;
+}
 
 void LOL() {
     LPVOID lpMsgBuf;
@@ -86,10 +114,14 @@ int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
     FullPath[1] = '\0';
   }
   hWndParent = mainWindowHandle;
+  
+//regManSaveLoadKeyConfig();
+  regManCheckLoadSettings(&g_gameSettings, FullPath);
 
   // Corrected parameter count for DialogBoxParamA
   if ( DialogBoxParamA(hInstance, MAKEINTRESOURCE(IDD_BOOT), 0, DialogFunc, 0) == -1 )
     return -1;
+ regManSaveSettingsAndPath(&g_gameSettings, FullPath);
 
   if ( isFullscreen == 1 )
     ResourceHandlerState |= 2u;
@@ -591,32 +623,72 @@ INT_PTR CALLBACK SpeedDialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 INT_PTR CALLBACK DialogFunc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    HWND itemHandle;
+    char folderPath[260];
+    size_t strLength;
+
     switch (uMsg)
     {
         case WM_INITDIALOG:
-            // Initialize dialog controls here if needed
+        {
+            SetDlgItemTextA(hwndDlg, 1034, FullPath);
+            SendDlgItemMessageA(hwndDlg, 1034, EM_SETSEL, 0, MAKELPARAM(0, -1));
+            itemHandle = GetDlgItem(hwndDlg, 1034);
+            SetFocus(itemHandle);
+            if (ResourceHandlerState)
+                CheckRadioButton(hwndDlg, 101, 102, 101);
+            else
+                CheckRadioButton(hwndDlg, 101, 102, 102);
+            if (isFullscreen)
+                CheckRadioButton(hwndDlg, 103, 103, 103);
             return TRUE;
+        }
 
         case WM_COMMAND:
             switch (LOWORD(wParam))
             {
                 case IDOK:
-                    EndDialog(hwndDlg, IDOK);
+                    EndDialog(hwndDlg, 0);
                     return TRUE;
 
                 case IDCANCEL:
-                    EndDialog(hwndDlg, IDCANCEL);
+                    EndDialog(hwndDlg, -1);
+                    return TRUE;
+
+                case 101:
+                    ResourceHandlerState |= 1;
+                    return TRUE;
+
+                case 102:
+                    ResourceHandlerState = 0;
+                    return TRUE;
+
+                case 103:
+                    isFullscreen = !isFullscreen;
                     return TRUE;
 
                 case IDC_SETTINGS:
-                    // Handle settings button click
-                    if (DialogBox(hInstance, MAKEINTRESOURCE(IDD_BOOT_OPTION), hwndDlg, OptionsDialogProc) == -1)
+                    if (DialogBox(hInstance, "IDD_BOOT_OPTION", hwndDlg, OptionsDialogProc) == -1)
                     {
-                        // Handle error if needed
+                        /* Handle error if needed */
                     }
+                    regManSaveSettingsAndPath(&g_gameSettings, FullPath);
                     return TRUE;
 
-                // ... other control handlers ...
+                case IDC_BUTTON1:  /* Assuming this is the "..." button with ID 1035 */
+                    if (BrowseAndSetFolderPath(hwndDlg, folderPath) != -1)
+                    {
+                        strLength = strlen(folderPath);
+                        if (strLength > 0 && folderPath[strLength - 1] != '\\')
+                            strcat(folderPath, "\\");
+                        strcpy(FullPath, folderPath);
+                        SetDlgItemTextA(hwndDlg, 1034, FullPath);
+                        SendDlgItemMessageA(hwndDlg, 1034, EM_SETSEL, 0, MAKELPARAM(0, -1));
+                        itemHandle = GetDlgItem(hwndDlg, 1034);
+                        SetFocus(itemHandle);
+                        regManSaveSettingsAndPath(&g_gameSettings, FullPath);
+                    }
+                    return TRUE;
             }
             break;
 
@@ -659,6 +731,8 @@ int InitDeviceCapabilities(void* param)
     // Stub implementation
     return 0;
 }
+
+
 
 
 

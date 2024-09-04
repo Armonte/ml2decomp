@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "resource.h"
+#include "winresource.h"
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
@@ -109,7 +109,7 @@ CAPTION "Configuring processing speed"
 FONT 9, "ＭＳ Ｐゴシック"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,135,65,50,14
-    LTEXT           "You can set the maximum number of frames of the animation when processing is dropped, how many frames to omit. (You can set a value from 2 to 32767) If the processing is dropped, the more frames to set here, the faster the game, but the rougher the animati??",
+    LTEXT           "frameskip or something? lol??",
                     -1,10,7,176,50
     EDITTEXT        IDC_EDIT_FRAMESKIP,18,58,44,16,ES_AUTOHSCROLL | 
                     ES_NUMBER
@@ -254,7 +254,7 @@ END
 
 2 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "#include ""resource.h""\r\n"
+    "#include ""winresource.h""\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
     "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
