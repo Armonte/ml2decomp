@@ -11,6 +11,7 @@
         "resource.h": "c",
         "keyboardmanager.h": "c",
         "mbstring.h": "c",
-        "joy.h": "c"
+        "joy.h": "c",
+        "string.h": "c"
     }
 }

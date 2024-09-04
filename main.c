@@ -72,7 +72,6 @@ int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 {
   int cdromDriveIndex;
   HWND mainWindowHandle = NULL;
-  MSG msg;  // Declare MSG at the beginning of the function
 
   hInstance = hInst;
   InitCommonControls();
@@ -116,24 +115,13 @@ int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 
   isGameStarted = 0;
 
-  // Process initial messages
-  while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-  {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
+
 
   // Call LOL() function after window is shown
   LOL();
 
-  // Message loop
-  while (GetMessage(&msg, NULL, 0, 0))
-  {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
 
-  return (int)msg.wParam;  // Cast to int to avoid warning
+  return 0;  // Cast to int to avoid warning
 }
 
 HWND __cdecl CreateMainWindow(int mode, HINSTANCE hInstance, int nCmdShow)

@@ -7,11 +7,14 @@
 #include <mbstring.h>
 #include "game.h"
 
-// Add these definitions
+extern int cbMultiByte;
+extern unsigned short* off_4C0858;
 char byte_4C0A71[259] = {0}; // Initialize with zeros or appropriate values
 char LIGHTS2_NCD[33056] = {0}; // Initialize with zeros or appropriate values
 BYTE unk_67A1A8[32] = {0}; // Initialize with zeros or appropriate values
 DWORD dataStructurePtr = 0; // Initialize with zero or an appropriate value
+int cbMultiByte = 0;  // Initialize with an appropriate value if needed
+unsigned short* off_4C0858 = NULL; 
 
 NCDFileEntry ncd_array[] = {
     {0x00000020, 0, 0x000012, 0x000012, "DUMMY"},
@@ -112,6 +115,278 @@ int FindCDDrive() {
     return -1;
 }
 
+#define RING_BUFFER_SIZE 4096
+
+static unsigned char decompressBuffer[RING_BUFFER_SIZE + 4];
+
+void *__cdecl PerformSpecialDataProcessing(
+        unsigned char *sourceData,
+        int operationType,
+        int compressedSize,
+        unsigned long decompressedSize,
+        unsigned long offset,
+        unsigned long requestedSize,
+        unsigned long *processedSizeOutput)
+{
+  unsigned long adjustedSize;
+  void *allocatedMemory;
+  void *resultBuffer;
+
+  if ( offset > decompressedSize )
+    return 0;
+  adjustedSize = requestedSize;
+  if ( offset + requestedSize > decompressedSize )
+    adjustedSize = decompressedSize - offset;
+  if ( processedSizeOutput )
+    *processedSizeOutput = 0;
+  allocatedMemory = malloc(adjustedSize);
+  resultBuffer = allocatedMemory;
+  if ( !allocatedMemory )
+    return 0;
+  if ( HandleDataProcessing(
+         sourceData,
+         operationType,
+         compressedSize,
+         decompressedSize,
+         allocatedMemory,
+         offset,
+         adjustedSize) )
+  {
+    if ( processedSizeOutput )
+      *processedSizeOutput = adjustedSize;
+    return resultBuffer;
+  }
+  else
+  {
+    free(resultBuffer);
+    return 0;
+  }
+}
+
+int __cdecl HandleDataProcessing(
+        unsigned char *sourceData,
+        int dataType,
+        int decompressionType,
+        unsigned long dataSize,
+        void *destination,
+        unsigned int offset,
+        int length)
+{
+    int processedLength;
+    unsigned int availableDataSize;
+    char *tempBuffer;
+
+    if (!sourceData || !destination)
+        return 0;
+    if (offset > dataSize)
+        return 0;
+    availableDataSize = length;
+    if (length + offset > dataSize)
+        availableDataSize = dataSize - offset;
+    if (dataType)
+    {
+        if (dataType == 2)
+        {
+            tempBuffer = (char *)malloc(dataSize);
+            if (tempBuffer)
+            {
+                DecompressData(decompressionType, sourceData, tempBuffer, 0, dataSize);
+                memcpy(destination, &tempBuffer[offset], availableDataSize);
+                free(tempBuffer);
+                return availableDataSize;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        processedLength = availableDataSize;
+        memcpy(destination, &sourceData[offset], availableDataSize);
+    }
+    return processedLength;
+}
+
+int __cdecl DecompressData(
+        int inputSize,
+        unsigned char *inputData,
+        char *decompressedData,
+        unsigned int decompressStartIndex,
+        int decompressLength)
+{
+    unsigned int bitBuffer = 0;
+    unsigned int outputIndex = 0;
+    int bufferPos = 4078;
+    unsigned char *currentByte, *nextByte;
+    char currentChar;
+    short offset, adjustedOffset;
+    int copyLength;
+    int remainingInput;
+    int copyIndex;
+
+    memset(decompressBuffer, 0, 0xFECu);
+    *(int*)&decompressBuffer[4076] = 0;
+
+    do
+    {
+        while (1)
+        {
+PROCESS_BIT:
+            bitBuffer >>= 1;
+            if ((bitBuffer & 0x100) == 0)
+            {
+                currentByte = inputData++;
+                if (--inputSize < 0)
+                    return 0;
+                bitBuffer = *currentByte | 0xFF00;
+            }
+            if ((bitBuffer & 1) == 0)
+                break;
+            currentByte = inputData++;
+            currentChar = *currentByte;
+            if (--inputSize < 0)
+                return 0;
+            if (decompressStartIndex <= outputIndex)
+                *decompressedData++ = currentChar;
+            if (decompressStartIndex + decompressLength == ++outputIndex)
+                return 0;
+            decompressBuffer[bufferPos] = currentChar;
+            bufferPos = (bufferPos + 1) & 0xFFF;
+        }
+        currentByte = inputData;
+        nextByte = inputData + 1;
+        offset = *currentByte;
+        remainingInput = inputSize - 1;
+        if (remainingInput < 0)
+            return 0;
+        currentByte = nextByte;
+        inputData = nextByte + 1;
+        currentChar = *currentByte;
+        inputSize = remainingInput - 1;
+        if (inputSize < 0)
+            return 0;
+        copyLength = (currentChar & 0xF) + 2;
+        adjustedOffset = (16 * (currentChar & 0xF0)) | offset;
+        copyIndex = 0;
+    }
+    while (copyLength < 0);
+
+    while (1)
+    {
+        currentChar = decompressBuffer[(copyIndex + adjustedOffset) & 0xFFF];
+        if (decompressStartIndex <= outputIndex)
+            *decompressedData++ = currentChar;
+        if (++outputIndex == decompressLength + decompressStartIndex)
+            return 0;
+        decompressBuffer[bufferPos] = currentChar;
+        bufferPos = (bufferPos + 1) & 0xFFF;
+        if (++copyIndex > copyLength)
+            goto PROCESS_BIT;
+    }
+}
+
+void *__stdcall ReadPortionOfFile(
+        LPCSTR fileName,
+        DWORD startOffset,
+        DWORD bytesToRead,
+        DWORD* bytesRead)
+{
+    void* buffer = NULL;
+    DWORD fileSize = 0;
+    DWORD actualBytesRead = 0;
+    HANDLE fileHandle;
+    DWORD fileSizeActual;
+    DWORD remainingBytes;
+    void* allocatedBuffer;
+
+    if (!fileName || !bytesToRead)
+        return NULL;
+
+    fileHandle = CreateFileA(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (fileHandle == INVALID_HANDLE_VALUE)
+        return NULL;
+
+    fileSizeActual = GetFileSize(fileHandle, NULL);
+    remainingBytes = fileSizeActual;
+
+    if (fileSizeActual != 0xFFFFFFFF && startOffset <= fileSizeActual && LockFile(fileHandle, 0, 0, fileSizeActual, 0))
+    {
+        fileSize = remainingBytes;
+        if (startOffset != 0)
+        {
+            if (SetFilePointer(fileHandle, startOffset, NULL, FILE_BEGIN) == 0xFFFFFFFF)
+                goto CLEANUP;
+            remainingBytes -= startOffset;
+        }
+
+        if (bytesToRead > remainingBytes)
+            bytesToRead = remainingBytes;
+
+        allocatedBuffer = malloc(bytesToRead);
+        buffer = allocatedBuffer;
+
+        if (allocatedBuffer && ReadFile(fileHandle, allocatedBuffer, bytesToRead, &actualBytesRead, NULL) && bytesToRead == actualBytesRead)
+        {
+            goto SUCCESS;
+        }
+    }
+
+CLEANUP:
+    if (buffer)
+    {
+        free(buffer);
+        buffer = NULL;
+    }
+
+SUCCESS:
+    if (fileSize && !UnlockFile(fileHandle, 0, 0, fileSize, 0))
+        buffer = NULL;
+
+    if (!CloseHandle(fileHandle))
+        buffer = NULL;
+
+    if (bytesRead)
+        *bytesRead = actualBytesRead;
+
+    return buffer;
+}
+
+void __cdecl convertToUppercaseShiftJIS(unsigned char *inputString)
+{
+  unsigned char *currentChar;
+  unsigned char charValue;
+  int isLowerCase;
+
+  currentChar = inputString;
+  if (inputString && *inputString)
+  {
+    do
+    {
+      charValue = *currentChar;
+      if (*currentChar < 0x80)
+      {
+        if (cbMultiByte <= 1)
+          isLowerCase = off_4C0858[charValue] & 2;
+        else
+          isLowerCase = _isctype(charValue, 2);
+        if (isLowerCase)
+          *currentChar -= 32;
+        ++currentChar;
+      }
+      else
+      {
+        currentChar += 2;
+      }
+    }
+    while (*currentChar);
+  }
+}
 
 int __cdecl CustomCharacterProcessing(unsigned char *inputChar)
 {
@@ -410,4 +685,55 @@ int __cdecl CustomDataCopy(LPCSTR lpFileName, NCDFileEntry* data)
   memcpy(unk_67A1A8, Buffer, 0x20);
   strcpy(LIGHTS2_NCD, lpFileName);
   return 0;
+}
+
+
+void *__cdecl ProcessAndFindMatchingEntry(
+        const char *fileName,
+        unsigned int fileOffset,
+        unsigned long requestedSize,
+        unsigned long *processedSize)
+{
+    NCDFileEntry *currentEntry;
+    unsigned char *fileData;
+    void *processedData;
+    char upperCaseFileName[260];
+
+    if (!fileName)
+        return 0;
+    if (!LIGHTS2_NCD[0] || !dataStructurePtr)
+        return 0;
+    if (processedSize)
+        *processedSize = 0;
+    currentEntry = (NCDFileEntry *)dataStructurePtr;
+    strcpy(upperCaseFileName, fileName);
+    convertToUppercaseShiftJIS(upperCaseFileName);
+    if (currentEntry->offset != -1)
+    {
+        while (currentEntry->offset != -1 && currentEntry->compressedSize != -1)
+        {
+            if (!strcmp(upperCaseFileName, currentEntry->name))
+            {
+                if (currentEntry->decompressedSize < fileOffset)
+                    return 0;
+                fileData = (unsigned char *)ReadPortionOfFile(LIGHTS2_NCD, currentEntry->offset, currentEntry->compressedSize, 0);
+                if (!fileData)
+                    return 0;
+                processedData = PerformSpecialDataProcessing(
+                    fileData,
+                    currentEntry->compressionFlag,
+                    currentEntry->compressedSize,
+                    currentEntry->decompressedSize,
+                    fileOffset,
+                    requestedSize,
+                    processedSize);
+                free(fileData);
+                return processedData;
+            }
+            currentEntry++;
+            if (currentEntry->offset == -1)
+                return 0;
+        }
+    }
+    return 0;
 }
