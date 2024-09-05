@@ -181,8 +181,9 @@ int __stdcall WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 
 
   initGame();
-  // Call LOL() function after window is shown
   LOL();
+  // Call LOL() function after window is shown
+
 
 
   return 0;  // Cast to int to avoid warning

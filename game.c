@@ -248,7 +248,8 @@ int initGame()
   ReallocateGlobalResourceArray(17);
   ReallocateRenderBuffer(600);
   ReallocateMemoryBuffer(32);
-  return HandleGlobalPalette(NULL) != NULL;
+    if ( !HandleGlobalPalette(0) )
+    return 0;
   processedPixelCount = 0;
   initAndRunGame();
   title_bmp_data = 0;
@@ -844,8 +845,6 @@ int UpdateColorInformation()
   return 0;
 }
 
-
-
 int ClearGlobalAnimControl()
 {
   int bytesToClear; // eax
@@ -1029,7 +1028,6 @@ int __cdecl UpdatePaletteEntries(int startIndex, UINT entryCount, char *colorDat
 AnimatePalette(g_globalPalette, startIndex, entriesToUpdate, (LPPALETTEENTRY)tempPalette);  free(tempPalette);
   return (g_globalPalette == 0) ? -1 : 0;
 }
-
 
 HPALETTE createDefaultPalette()
 {
@@ -1657,6 +1655,7 @@ void initAndRunGame()
       ClearGlobalAnimControl();
     }
     while (frameCounter < 240);
+    LOL();
     g_UpdateObject();
     free(bitmapHandle);
   }

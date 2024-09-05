@@ -13,6 +13,7 @@ int regManCheckLoadSettings(GameSettings* settings, char* FullPath)
     HKEY registryKey;
     DWORD dataSize, dataType, keyDisposition;
     LONG status;
+    char tempPath[MAX_PATH];
 
     /* Check and load settings */
     dataSize = sizeof(GameSettings);
@@ -26,7 +27,8 @@ int regManCheckLoadSettings(GameSettings* settings, char* FullPath)
     {
         status = RegSetValueExA(registryKey, SETTINGS_VALUE, 0, dataType, (BYTE*)settings, dataSize);
         RegCloseKey(registryKey);
-        return (status == ERROR_SUCCESS) ? 0 : -1;
+        if (status != ERROR_SUCCESS)
+            return -1;
     }
     else
     {
@@ -48,14 +50,25 @@ int regManCheckLoadSettings(GameSettings* settings, char* FullPath)
     {
         status = RegSetValueExA(registryKey, BROWSE_VALUE, 0, dataType, (BYTE*)FullPath, dataSize);
         RegCloseKey(registryKey);
-        return (status == ERROR_SUCCESS) ? 0 : -1;
+        if (status != ERROR_SUCCESS)
+            return -1;
     }
     else
     {
-        status = RegQueryValueExA(registryKey, BROWSE_VALUE, NULL, &dataType, (BYTE*)FullPath, &dataSize);
+        status = RegQueryValueExA(registryKey, BROWSE_VALUE, NULL, &dataType, (BYTE*)tempPath, &dataSize);
         RegCloseKey(registryKey);
-        return (status == ERROR_SUCCESS) ? 0 : -1;
+        if (status == ERROR_SUCCESS)
+        {
+            strncpy(FullPath, tempPath, MAX_PATH - 1);
+            FullPath[MAX_PATH - 1] = '\0';  // Ensure null-termination
+        }
+        else
+        {
+            return -1;
+        }
     }
+
+    return 0;
 }
 
 int regManSaveSettingsAndPath(GameSettings* settings, const char* FullPath)
