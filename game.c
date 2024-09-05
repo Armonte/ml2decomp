@@ -18,7 +18,7 @@
 extern int g_maxScreenWidth;
 extern int g_maxScreenHeight;
 
-PALETTEENTRY g_gamePaletteEntries[256];
+PALETTEENTRY g_gamePaletteEntries[256] = {0}; 
 HPALETTE g_globalPalette;
 unsigned char *g_memoryBuffer;
 int g_memoryBufferSize;
@@ -33,6 +33,14 @@ char g_flag1;
 int g_someGameState;
 char byte_6B2F74;
 char byte_6B2E65;
+
+/* PALETTEENTRY g_gamePaletteEntries[256] = {
+    {255, 0, 0, 0},    // First entry: Red
+    {0, 255, 0, 0},    // Second entry: Green
+    {0, 0, 255, 0},    // Third entry: Blue
+    // ... more entries as needed ...
+    {0, 0, 0, 0}       // Last entry: Black
+}; */
 
 
 int g_maxRenderEntries = 0;  // Initialize with an appropriate value
@@ -91,7 +99,7 @@ int initializeResourceHandlers()
     int (*finalizeResources)(void*, int);
 
     if (ResourceHandlerState != 3)
-        return -1;
+  return -1;
 
     for (i = 0; i < 27; i++)
     {
@@ -508,8 +516,7 @@ int __cdecl UpdatePaletteEntries(int startIndex, UINT entryCount, char *colorDat
     }
   }
   memcpy(&g_gamePaletteEntries[startIndex], tempPalette, sizeof(PALETTEENTRY) * entriesToUpdate);
-  AnimatePalette(g_globalPalette, startIndex, entriesToUpdate, tempPalette);
-  free(tempPalette);
+AnimatePalette(g_globalPalette, startIndex, entriesToUpdate, (LPPALETTEENTRY)tempPalette);  free(tempPalette);
   return (g_globalPalette == 0) ? -1 : 0;
 }
 
@@ -1014,9 +1021,9 @@ int updateGameState1()
                     success = fillRectColorWrapper((RectangleParams *)currentObject);
                 else
                     success = -1;
-            }
-            else
-            {
+  }
+  else
+  {
                 success = renderPixelAreaWrapper((RenderPixelAreaParams *)currentObject);
             }
             if (!success)

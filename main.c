@@ -1,13 +1,16 @@
 #include <windows.h>
+#include <ddraw.h>
 #include <commctrl.h>
 #include <stdio.h>
+#include <dsound.h>
 #include "reg.h"
 #include "FileUtils.h"
 #include "main.h"
 #include "game.h"
+#include <mmsystem.h>
 #include "winresource.h"
 #include <shlobj.h>
-
+#define MAX_OFNA_STRUCTS 5
 // Declare the missing variables
 char szClass[] = "Moon Lights 2";
 char FullPath[260];
@@ -21,7 +24,23 @@ int isGameStarted = 0;
 LPCSTR BITDEPTH_ERROR_EN = "This game is for 256-color mode only.\nFrom Start -> Settings -> Control Panel -> Display Properties -> Display Details -> Set the color palette section to 256 colors.\nPlease reboot your machine";
 LPCSTR BITDEPTH_ERROR_JP = "This game is for 256-color mode only.\nFrom Start -> Settings -> Control Panel -> Display Properties -> Display Details -> Set the color palette section to 256 colors.\nPlease reboot your machine";
 
-// Add these declarations at the top of the file
+extern LPDIRECTDRAW lpDD;
+
+extern LPDIRECTDRAWSURFACE g_backBuffer;
+
+extern LPDIRECTDRAWCLIPPER g_ddClipper;
+
+extern int isFullscreenReg;
+
+extern struct tagOFNA unk_6472F0[MAX_OFNA_STRUCTS];
+extern struct tagOFNA stru_647310;
+extern DWORD dword_4C0658;
+extern LPDIRECTSOUND ppDS;
+
+int currentGameType = 0;
+BOOL isSaveRequested = FALSE;
+BOOL isWindowActive = FALSE;
+
 const char* IconName = "ICON";
 const char* Caption = "Moon Lights 2";
 const char* pszDriver = "Display";
@@ -38,11 +57,24 @@ int settings_sound_effects = 0;
 int dword_439884 = 0;
 int dword_439880 = 0;
 
+int colorDepth;
+int screenWidth;
+int screenHeight;
+
 GameSettings g_gameSettings;
 
 #pragma comment(lib, "shell32.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "ole32.lib")  // For CoTaskMemFree
+#pragma comment(lib, "ddraw.lib")
+
+LPDIRECTSOUND ppDS = NULL;
+DWORD dword_4C0658 = 0;
+struct tagOFNA unk_6472F0[MAX_OFNA_STRUCTS];
+struct tagOFNA stru_647310;
+
+LPDIRECTDRAWCLIPPER g_ddClipper = NULL;
+LPDIRECTDRAWSURFACE g_backBuffer = NULL;
 
 int BrowseAndSetFolderPath(HWND hwndParent, char* folderPathBuffer)
 {
@@ -621,114 +653,378 @@ INT_PTR CALLBACK SpeedDialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
     return FALSE;
 }
 
-INT_PTR CALLBACK DialogFunc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall DialogFunc(HWND dialogHandle, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND itemHandle;
+    unsigned int strLength;
+    unsigned int strIndex;
+    HWND dlgItemHandle;
     char folderPath[260];
-    size_t strLength;
 
-    switch (uMsg)
+    if (message == WM_INITDIALOG)
     {
-        case WM_INITDIALOG:
+        SetDlgItemTextA(dialogHandle, 1034, FullPath);
+        SendDlgItemMessageA(dialogHandle, 1034, EM_SETSEL, 0, MAKELPARAM(0, -1));
+        itemHandle = GetDlgItem(dialogHandle, 1034);
+        SetFocus(itemHandle);
+        if (ResourceHandlerState)
+            CheckRadioButton(dialogHandle, 101, 102, 101);
+        else
+            CheckRadioButton(dialogHandle, 101, 102, 102);
+        if (isFullscreen)
+            CheckRadioButton(dialogHandle, 103, 103, 103);
+        return 0;
+    }
+
+    if (message != WM_COMMAND)
+        return 0;
+
+    switch (LOWORD(wParam))
+    {
+        case IDOK:
+            EndDialog(dialogHandle, 0);
+            return 0;
+
+        case IDCANCEL:
+            EndDialog(dialogHandle, -1);
+            return 0;
+
+        case 101:
+            ResourceHandlerState |= 1u;
+            return 0;
+
+        case 102:
+            ResourceHandlerState = 0;
+            return 0;
+
+        case 103:
+            isFullscreen = (isFullscreen + 1) & 1;
+            return 0;
+
+        case IDC_SETTINGS:
+            if (DialogBoxParamA(hInstance, MAKEINTRESOURCE(IDD_BOOT_OPTION), dialogHandle, OptionsDialogProc, 0) == -1)
+                return 0;
+            regManSaveSettingsAndPath(&g_gameSettings, FullPath);
+            return 0;
+
+        case IDC_BUTTON1:
+            if (BrowseAndSetFolderPath(dialogHandle, folderPath) == -1)
+                return 0;
+            strLength = strlen(folderPath) + 1;
+            strIndex = strLength - 1;
+            if (strLength != 1 && folderPath[strIndex - 1] != '\\')
+                strcat(&folderPath[strIndex], "\\");
+            memcpy(FullPath, folderPath, sizeof(FullPath));
+            SetDlgItemTextA(dialogHandle, 1034, FullPath);
+            SendDlgItemMessageA(dialogHandle, 1034, EM_SETSEL, 0, MAKELPARAM(0, -1));
+            dlgItemHandle = GetDlgItem(dialogHandle, 1034);
+            SetFocus(dlgItemHandle);
+            regManSaveSettingsAndPath(&g_gameSettings, FullPath);
+            return 0;
+
+        default:
+            return 0;
+    }
+}
+
+LRESULT CALLBACK handleMenuCallHotkeys(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam)
+{
+  LRESULT result = 0;
+
+  if (message > WM_ACTIVATEAPP)
+  {
+    switch (message)
+    {
+      case WM_KEYDOWN:
+        if (wParam == VK_ESCAPE)
         {
-            SetDlgItemTextA(hwndDlg, 1034, FullPath);
-            SendDlgItemMessageA(hwndDlg, 1034, EM_SETSEL, 0, MAKELPARAM(0, -1));
-            itemHandle = GetDlgItem(hwndDlg, 1034);
-            SetFocus(itemHandle);
-            if (ResourceHandlerState)
-                CheckRadioButton(hwndDlg, 101, 102, 101);
-            else
-                CheckRadioButton(hwndDlg, 101, 102, 102);
-            if (isFullscreen)
-                CheckRadioButton(hwndDlg, 103, 103, 103);
-            return TRUE;
+          DestroyWindow(windowHandle);
+          return 0;
         }
-
-        case WM_COMMAND:
-            switch (LOWORD(wParam))
-            {
-                case IDOK:
-                    EndDialog(hwndDlg, 0);
-                    return TRUE;
-
-                case IDCANCEL:
-                    EndDialog(hwndDlg, -1);
-                    return TRUE;
-
-                case 101:
-                    ResourceHandlerState |= 1;
-                    return TRUE;
-
-                case 102:
-                    ResourceHandlerState = 0;
-                    return TRUE;
-
-                case 103:
-                    isFullscreen = !isFullscreen;
-                    return TRUE;
-
-                case IDC_SETTINGS:
-                    if (DialogBox(hInstance, "IDD_BOOT_OPTION", hwndDlg, OptionsDialogProc) == -1)
-                    {
-                        /* Handle error if needed */
-                    }
-                    regManSaveSettingsAndPath(&g_gameSettings, FullPath);
-                    return TRUE;
-
-                case IDC_BUTTON1:  /* Assuming this is the "..." button with ID 1035 */
-                    if (BrowseAndSetFolderPath(hwndDlg, folderPath) != -1)
-                    {
-                        strLength = strlen(folderPath);
-                        if (strLength > 0 && folderPath[strLength - 1] != '\\')
-                            strcat(folderPath, "\\");
-                        strcpy(FullPath, folderPath);
-                        SetDlgItemTextA(hwndDlg, 1034, FullPath);
-                        SendDlgItemMessageA(hwndDlg, 1034, EM_SETSEL, 0, MAKELPARAM(0, -1));
-                        itemHandle = GetDlgItem(hwndDlg, 1034);
-                        SetFocus(itemHandle);
-                        regManSaveSettingsAndPath(&g_gameSettings, FullPath);
-                    }
-                    return TRUE;
-            }
-            break;
-
-        case WM_CLOSE:
-            EndDialog(hwndDlg, IDCANCEL);
-            return TRUE;
+        if (wParam == VK_F3) // 'r' key (F3 for "reconfigure")
+        {
+        //  sound_playsfxwrapper(0, 1, 10);
+          if (ResourceHandlerState == 3)
+            releaseDirectDrawResources();
+          ShowCursor(TRUE);
+          // saveKeyConfig();
+          if (DialogBoxParamA(hInstance, MAKEINTRESOURCE(IDD_KEYCONFIG), windowHandle, handleKeyConfigWindow, 0) == -1)
+            return -1;
+          // loadKeyConfig();
+          if ((ResourceHandlerState & 1) != 0)
+            ShowCursor(FALSE);
+          // updateJoysticks(windowHandle);
+          if (ResourceHandlerState == 3)
+          {
+            if (initDirectDraw(1, windowHandle) && ResourceHandlerState == 3)
+              UpdateColorInformation();
+          }
+          else
+          {
+            updatePalette();
+          }
+         // sound_playsfxwrapper(0, 1, 10);
+          return 0;
+        }
+        if (wParam == VK_F4) // 's' key (F4 for "save")
+        {
+          if (currentGameType == GAME_TYPE_VERSUS || currentGameType == GAME_TYPE_TEAM || currentGameType == GAME_TYPE_TOURNAMENT)
+          {
+          // sound_playsfxwrapper(0, 1, 10);
+            isSaveRequested = 1;
+            return 0;
+          }
+        }
+        break;
+      case WM_SETFOCUS:
+      case WM_ACTIVATEAPP:
+        if (wParam != (WPARAM)windowHandle && ResourceHandlerState != 3)
+        {
+          updatePalette();
+        }
+        break;
+      default:
+        return DefWindowProcA(windowHandle, message, wParam, lParam);
     }
-
-    return FALSE;
-}
-
-LRESULT CALLBACK handleMenuCallHotkeys(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
+    return 0;
+  }
+  
+  if (message == WM_ACTIVATEAPP)
+  {
+    isWindowActive = (wParam != 0);
+    return 0;
+  }
+  else if (message == WM_DESTROY)
+  {
+    // resetAudio();
+    // cleanupAudio();
+    if (!AudioHandler)
     {
-        case WM_CLOSE:
-            DestroyWindow(hWnd);
-            return 0;
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-        // ... handle other messages as needed ...
+       releaseResources();
     }
-    return DefWindowProc(hWnd, uMsg, wParam, lParam);
+    if (ResourceHandlerState == 1)
+    {
+      colorDepth = 8;  // Assuming 8-bit color depth
+      screenWidth = GetSystemMetrics(SM_CXSCREEN);
+      screenHeight = GetSystemMetrics(SM_CYSCREEN);
+      ChangeDisplayResolutionAndDepth(colorDepth, screenWidth, screenHeight);
+    }
+     releaseDirectDrawResources();
+    ShowCursor(TRUE);
+    PostQuitMessage(0);
+    return 0;
+  }
+  
+  return DefWindowProcA(windowHandle, message, wParam, lParam);
 }
 
-int initDirectDraw(int mode, HWND hwnd)
+int __cdecl initDirectDraw(int isFullScreen, HWND windowHandle)
 {
-    // Stub implementation
+  DDSURFACEDESC ddsd;
+  DDSCAPS ddscaps;
+//  HRESULT hr;
+  
+  if (DirectDrawCreate(NULL, &lpDD, NULL) != DD_OK)
+    return 0;
+  
+  if (isFullScreen)
+  {
+    if (lpDD->lpVtbl->SetCooperativeLevel(lpDD, windowHandle, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN) != DD_OK)
+      return 0;
+    
+    if (isFullscreenReg)
+    {
+      if (lpDD->lpVtbl->SetDisplayMode(lpDD, 640, 480, 8) != DD_OK)
+        return 0;
+    }
+    else if (lpDD->lpVtbl->SetDisplayMode(lpDD, 320, 240, 8) != DD_OK)
+    {
+      return 0;
+    }
+    
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX;
+    ddsd.dwBackBufferCount = 1;
+    
+    if (lpDD->lpVtbl->CreateSurface(lpDD, &ddsd, (LPDIRECTDRAWSURFACE*)&graphicsInterface, NULL) != DD_OK)
+      return 0;
+    
+    ddscaps.dwCaps = DDSCAPS_BACKBUFFER;
+    if (((LPDIRECTDRAWSURFACE)graphicsInterface)->lpVtbl->GetAttachedSurface((LPDIRECTDRAWSURFACE)graphicsInterface, &ddscaps, (LPDIRECTDRAWSURFACE*)&g_backBuffer) != DD_OK)
+      return 0;
+    
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+    ddsd.dwWidth = 256;
+    ddsd.dwHeight = 256;
+    
+    if (lpDD->lpVtbl->CreateSurface(lpDD, &ddsd, (LPDIRECTDRAWSURFACE*)&g_resourceManager, NULL) != DD_OK)
+      return 0;
+  }
+  else
+  {
+    if (lpDD->lpVtbl->SetCooperativeLevel(lpDD, windowHandle, DDSCL_NORMAL) != DD_OK)
+      return 0;
+    
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
+    
+    if (lpDD->lpVtbl->CreateSurface(lpDD, &ddsd, (LPDIRECTDRAWSURFACE*)&graphicsInterface, NULL) != DD_OK)
+      return 0;
+    
+    if (lpDD->lpVtbl->CreateClipper(lpDD, 0, &g_ddClipper, NULL) != DD_OK)
+      return 0;
+    
+    if (g_ddClipper->lpVtbl->SetHWnd(g_ddClipper, 0, windowHandle) != DD_OK)
+      return 0;
+    
+    if (((LPDIRECTDRAWSURFACE)graphicsInterface)->lpVtbl->SetClipper((LPDIRECTDRAWSURFACE)graphicsInterface, g_ddClipper) != DD_OK)
+      return 0;
+    
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+    ddsd.dwWidth = GetSystemMetrics(SM_CXSCREEN);
+    ddsd.dwHeight = GetSystemMetrics(SM_CYSCREEN);
+    
+    if (lpDD->lpVtbl->CreateSurface(lpDD, &ddsd, (LPDIRECTDRAWSURFACE*)&g_graphicsManager, NULL) != DD_OK)
+      return 0;
+  }
+  return 1;
+}
+
+int releaseResources()
+{
+    struct tagOFNA *currentStruct;
+    struct tagOFNA *endStruct;
+    void (*releaseFunc)(void*);
+
+    currentStruct = unk_6472F0;
+    endStruct = &stru_647310;
+
+    while (currentStruct < endStruct)
+    {
+        if (currentStruct->lStructSize)
+        {
+            releaseFunc = (void (*)(void*))(*((DWORD *)currentStruct->lStructSize) + 8);
+            releaseFunc((void*)currentStruct->lStructSize);
+        }
+        currentStruct->lStructSize = 0;
+        currentStruct++;
+    }
+
+    if (dword_4C0658)
+    {
+        releaseFunc = (void (*)(void*))(*((DWORD *)dword_4C0658) + 8);
+        releaseFunc((void*)dword_4C0658);
+    }
+    dword_4C0658 = 0;
+
+    if (ppDS)
+    {
+        ppDS->lpVtbl->Release(ppDS);
+    }
+    ppDS = 0;  // Use 0 instead of NULL for VS 1998
+
     return 0;
 }
 
-void ChangeDisplayResolutionAndDepth(int colorDepth, int width, int height)
+int releaseDirectDrawResources() // Note: This function uses old-style casts
 {
-    // Stub implementation
+  if (lpDD)
+  {
+    if (graphicsInterface)
+      (*(void (__cdecl **)(void *))(*((DWORD *)graphicsInterface) + 8))(graphicsInterface);
+    
+    if (g_resourceManager)
+      (*(void (__cdecl **)(void *))(*((DWORD *)g_resourceManager) + 8))(g_resourceManager);
+    
+    if (g_graphicsManager)
+      (*(void (__cdecl **)(void *))(*((DWORD *)g_graphicsManager) + 8))(g_graphicsManager);
+    
+    lpDD->lpVtbl->Release(lpDD);
+    lpDD = NULL;
+  }
+  return 0;
 }
 
-int InitDeviceCapabilities(void* param)
+int updatePalette()
 {
-    // Stub implementation
+  int result; // eax
+
+  if ( !g_globalPalette )
+    return -1;
+   result = AnimatePalette(g_globalPalette, 0, 0x100u, (LPPALETTEENTRY)g_gamePaletteEntries);
+if (!result)
+    return -1;
+  return result;
+}
+
+int ChangeDisplayResolutionAndDepth(int colorDepth, int resolutionWidth, int resolutionHeight)
+{
+    DEVMODE deviceMode;
+    LONG result;
+
+    // Validate input parameters
+    if (colorDepth != 4 && colorDepth != 8 && colorDepth != 16 && colorDepth != 24 && colorDepth != 32)
+        return -1;
+    if (resolutionWidth < 640 || resolutionHeight < 480)
+        return -1;
+
+    // Initialize device capabilities
+    if (InitDeviceCapabilities(unk_4C1560) != -1)
+        return -1;
+
+    // Set the new display settings
+    deviceMode.dmBitsPerPel = colorDepth;
+    deviceMode.dmPelsWidth = resolutionWidth;
+    deviceMode.dmPelsHeight = resolutionHeight;
+    deviceMode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+    // Attempt to change the display settings
+    result = ChangeDisplaySettingsA(&deviceMode, 0);
+
+    // Return 0 if successful, -1 if failed
+    return (result == DISP_CHANGE_SUCCESSFUL) ? 0 : -1;
+}
+
+int InitDeviceCapabilities(void** param)
+{
+    DEVMODE* deviceMode;
+    HDC deviceContext;
+
+    if (!param)
+        return -1;
+    
+    deviceMode = (DEVMODE*)*param;
+    if (!deviceMode)
+    {
+        *param = malloc(sizeof(DEVMODE));
+        if (!*param)
+            return -1;
+        deviceMode = (DEVMODE*)*param;
+    }
+    
+    ZeroMemory(deviceMode, sizeof(DEVMODE));
+    deviceMode->dmSize = sizeof(DEVMODE);
+    
+    deviceContext = GetDC(NULL);
+    if (!deviceContext)
+        return -1;
+    
+    deviceMode->dmLogPixels = GetDeviceCaps(deviceContext, LOGPIXELSY);
+    deviceMode->dmBitsPerPel = GetDeviceCaps(deviceContext, BITSPIXEL);
+    deviceMode->dmPelsWidth = GetDeviceCaps(deviceContext, HORZRES);
+    deviceMode->dmPelsHeight = GetDeviceCaps(deviceContext, VERTRES);
+    
+    ReleaseDC(NULL, deviceContext);
     return 0;
 }
 

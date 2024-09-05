@@ -50,8 +50,16 @@ extern int ResourceHandlerState;
 extern void* bufferPointer;
 extern void* colorTable1;
 extern void* colorTable2;
+
 extern LPDIRECTDRAW lpDD;
 extern void* graphicsInterface;
+extern BYTE g_resourceInitCount;  // Replace byte_43F1BC
+extern void* g_resourceManager;   // Replace ResourceManager
+extern void* g_graphicsManager;   // Replace dword_439854
+extern BOOL g_isFullscreen;       // Replace isFullscreenReg
+extern BOOL g_isHighResolution;   // Replace screenResolutionFlag
+
+
 extern int gamestateVariable_Unk;
 
 extern int g_isTimerDivisionActive; 
@@ -72,13 +80,10 @@ extern DWORD LastActionTickCount;
 extern NCDFileEntry ncd_array[];
 
 extern HPALETTE g_globalPalette;
+extern PALETTEENTRY tempPalette[256]; 
 extern PALETTEENTRY g_gamePaletteEntries[256];
 
-extern BYTE g_resourceInitCount;  // Replace byte_43F1BC
-extern void* g_resourceManager;   // Replace ResourceManager
-extern void* g_graphicsManager;   // Replace dword_439854
-extern BOOL g_isFullscreen;       // Replace isFullscreenReg
-extern BOOL g_isHighResolution;   // Replace screenResolutionFlag
+
 
 
 extern unsigned char *g_memoryBuffer;
@@ -113,6 +118,8 @@ typedef struct {
     DWORD bottom;
 } BufferInfo;
 
+
+
 int __cdecl InitializeBuffer(BufferInfo *bufferInfo, int startX, int startY, int width, int height);
 int initializeResourceHandlers(void);
 int isGraphicsSystemInitialized(void);
@@ -120,7 +127,10 @@ int __cdecl fillRectColorWrapper(RectangleParams *params);
 int __cdecl fillRectangleWithColor(char color, int startX, int startY, unsigned int width, int height);
 int setPixel(char colorIndex, int x, int y);
 int MessageHandlingLoop(void);
+
 int initGame(void);
+void initAndRunGame(void);
+
 int updateGameState1(void);
 int DecrementandResetVariables(void);
 int resetGlobalVariables(void);

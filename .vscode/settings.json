@@ -13,6 +13,9 @@
         "mbstring.h": "c",
         "joy.h": "c",
         "string.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "reg.h": "c",
+        "dsound.h": "c",
+        "winresource.h": "c"
     }
 }

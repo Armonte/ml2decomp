@@ -1,13 +1,23 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#define GAME_TYPE_VERSUS     8
+#define GAME_TYPE_TEAM       9
+#define GAME_TYPE_TOURNAMENT 11
+#include <ddraw.h>
 #include <windows.h>
 #include <commctrl.h>
+#include <dsound.h>
+#include <ddraw.h>
 
 // Function declarations
+
+int sound_playsfxwrapper(int, int, int);
 int __cdecl SetWindowToForegroundIfMinimized(LPCSTR lpszClass);
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
+int ChangeDisplayResolutionAndDepth(int colorDepth, int screenWidth, int screenHeight);
 
+int InitDeviceCapabilities(void** param);
 // Variable declarations
 extern int IDD_BOOT;
 extern char szClass[];
@@ -38,12 +48,11 @@ extern HINSTANCE hInstance;
 
 // Function prototypes
 HWND CreateMainWindow(int mode, HINSTANCE hInstance, int nShowCmd);
-int InitDeviceCapabilities(void* param);
-void ChangeDisplayResolutionAndDepth(int colorDepth, int width, int height);
 int initDirectDraw(int mode, HWND hwnd);
+int releaseDirectDrawResources(void); 
 LRESULT CALLBACK handleMenuCallHotkeys(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-
+int updatePalette(void);
+int releaseResources(void);
 void LOL(void);
 
 // Add these new function prototypes
@@ -61,10 +70,8 @@ INT_PTR CALLBACK SpeedDialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 INT_PTR CALLBACK DialogFunc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK OptionsDialogProc(HWND, UINT, WPARAM, LPARAM);
 
-// Add these function declarations
 
-
-// External variable declarations
+extern int isFullscreenReg;
 extern int isFullscreen;
 extern int isAudioEnabled;
 extern int dword_43986C;
@@ -77,6 +84,15 @@ extern int dword_439884;
 extern int settings_sound_effects;
 extern int dword_43988C;
 
+#define MAX_OFNA_STRUCTS 5  // Adjust this based on the actual number of structures
+
+
+
+
+extern int currentGameType;
+extern BOOL isSaveRequested;
+extern BOOL isWindowActive;
+extern int AudioHandler;
 
 /* Function declarations */
 
