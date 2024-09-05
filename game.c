@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <winuser.h>
+
 #include "FileUtils.h"
 #include "anim.h"
 #include "audio.h"
@@ -13,11 +15,29 @@
 #include "KeyboardManager.h"
 #include "main.h"
 #include "winresource.h"
-#include <winuser.h>
 
+// Constants for BMP file names
+static const char* TITLE_BMP = "TITLE.BMP";
+static const char* PSEL_BMP = "PSEL.BMP";
+static const char* TOKYO_BMP = "TOKYO.BMP";
+static const char* GRAD_BMP = "GRAD.BMP";
+
+// Pointers for BMP data
+static void* title_bmp_data = NULL;
+static void* psel_bmp_data = NULL;
+static void* tokyo_bmp_data_pointer = NULL;
+static void* grad_bmp_data = NULL;
+
+// Game state variables
+static int showInputDisplay = 0;
+static int gametype_enabled = 0;
+static int HITSTOP_SLOWDOWN[1] = {0};
+
+// Global screen dimensions
 extern int g_maxScreenWidth;
 extern int g_maxScreenHeight;
 
+// Palette and memory management
 PALETTEENTRY g_gamePaletteEntries[256] = {0}; 
 HPALETTE g_globalPalette;
 unsigned char *g_memoryBuffer;
@@ -26,6 +46,8 @@ void *GlobalResourceArray;
 int resourceArraySize;
 void *g_renderBuffer;
 int g_renderBufferSize;
+
+// Screen and game state variables
 int screenPosHorizontal;
 short g_globalTimerValue;
 char g_flag2;
@@ -34,24 +56,19 @@ int g_someGameState;
 char byte_6B2F74;
 char byte_6B2E65;
 
-/* PALETTEENTRY g_gamePaletteEntries[256] = {
-    {255, 0, 0, 0},    // First entry: Red
-    {0, 255, 0, 0},    // Second entry: Green
-    {0, 0, 255, 0},    // Third entry: Blue
-    // ... more entries as needed ...
-    {0, 0, 0, 0}       // Last entry: Black
-}; */
-
-
-int g_maxRenderEntries = 0;  // Initialize with an appropriate value
+// Rendering and game state
+int g_maxRenderEntries = 0;
 int g_renderEntryCount = 0;
-
 int gamestateVariable_Unk = 0;
+
+// Graphics and game interface
 void* graphicsInterface = NULL;
 LPDIRECTDRAW lpDD = NULL;
 void* colorTable2 = NULL;
 void* colorTable1 = NULL;
 void* bufferPointer = NULL;
+
+// Timing and state management
 DWORD LastActionTickTime = 0;
 BYTE byte_43F1EC = 0;
 HDC hdc = NULL;
@@ -62,10 +79,9 @@ DWORD FrameMaxTickCount = 0;
 DWORD GameMaxTickCount = 0;
 BOOL IsGamePaused = FALSE;
 DWORD FrameTickCount_0 = 0;
-
 int currentSize = 0;
 
-// Ensure this is only defined once
+// Timer-related definitions
 #ifndef TIMER_DEFINITIONS_H
 #define TIMER_DEFINITIONS_H
 
@@ -73,7 +89,7 @@ int g_isTimerDivisionActive = 0;
 int g_timerInitialValue = 0; 
 int g_timerDivisionFactor = 0; 
 int g_timerDividedValue = 0; 
-short g_timercurrentValue; // Assuming this is a short based on your usage
+short g_timercurrentValue; // Assuming this is a short based on usage
 BOOL g_isMouseActive = FALSE;
 DWORD LastActionTickCount = 0;
 DWORD g_frameTickCount_0 = 0;
@@ -88,8 +104,502 @@ BOOL g_isHighResolution = FALSE;
 BOOL g_isFullscreen = FALSE;
 BYTE g_resourceInitCount = 0;
 
-
 #endif // TIMER_DEFINITIONS_H
+
+void HandleGameOptionsRegistry(void);
+void InitializeGameResources(void);
+int GameLoop(void);
+int css_general(void);
+void MainBattle(void);
+void audioReset(void);
+int mmBgScroll(void);
+void mmManualPages(void);
+int mmCssTeamBattle(void);
+void gameMainLoop(void);
+
+void nullsub_1(void);
+void nullsub_2(void);
+void nullsub_3(void);
+void MainEventLoop(void);
+
+
+void gameMainLoop(void) {
+    // Null implementation
+}
+
+void MainBattle(void) {
+    // Null implementation
+}
+
+void MainEventLoop(void) {
+    // Null implementation
+}
+
+int css_general(void) {
+    // Null implementation
+    return 0; // Return 0 as a default value
+}
+
+int GameLoop(void) {
+    // Null implementation
+    return 0; // Return 0 as a default value
+}
+
+void InitializeGameResources(void) {
+    // Null implementation
+}
+
+void mmManualPages(void){
+
+}
+
+int mmCssTeamBattle(void){
+return 0;
+}
+
+int mmBgScroll(void){
+return 0;
+}
+
+void nullsub_1(void){
+
+}
+
+void nullsub_2(void){
+
+}
+void nullsub_3(void){
+
+}
+
+int dword_6B2E08 = 0;
+int dword_688028 = 0;
+int dword_6B2FD4 = 0;
+int dword_6B2BB4 = 0;
+int gfx_spritetrail = 0;
+int gamespeed = 0;
+int option_difficulty_copy = 0;
+int option_difficulty = 0;
+int option_timer = 0;
+int roundsToWin = 0;
+int p2_char = 0;
+int character[1] = {0};  // Adjust the size if needed
+int p1_setCPU[1] = {0};  // Adjust the size if needed
+int p2_setCPU = 0;
+int byte_6B2BB9 = 0;
+int* hitcount = NULL;  // You might need to allocate memory for this
+int byte_6B2DFC = 0;
+short p1_health[1] = {0};  // Adjust the size if needed
+int dword_6B2E10 = 0;
+int dword_6B2E60[1] = {0};  // Adjust the size if needed
+int spriteDataLimitArray[1] = {0};  // Adjust the size if needed
+int dword_6B2E14 = 0;
+short p1_meter_Stocks[1] = {0};  // Adjust the size if needed
+int p2_dataLimit = 0;
+
+int initGame()
+{
+  char customDirResult; // al
+  int processedPixelCount; // esi
+   unsigned char *tokyoBitmapDataPtr; // eax
+   unsigned char *gradBitmapDataPtr; // eax
+   int pixelIndex; // edx
+   int gameLoopResult; // eax
+   int *resourceArrayPointer; // eax
+   short *cpuSetPointer; // eax
+   int savedOptionTimer; // esi
+   int savedRoundsToWin; // edi
+//  int gameModeResult; // edi
+//  int battleResult; // eax
+//  int *cpuCharPointer; // ecx
+//  int loopTimer; // esi
+   int resetTimer; // esi
+   int savedRounds; // edi
+// short *charMeterPointer; // eax
+   int savedRoundsTemp; // esi
+   int bitmapWidth; // [esp+10h] [ebp-528h] BYREF
+   int bitmapHeight; // [esp+14h] [ebp-524h] BYREF
+   char tempOptionDifficultyCopy; // [esp+18h] [ebp-520h]
+  // int optionDifficultyCopyTemp; // [esp+20h] [ebp-518h]
+  char directoryPath[260]; // [esp+24h] [ebp-514h] BYREF
+  char drivePath[260]; // [esp+128h] [ebp-410h] BYREF
+  char fullPathBuffer[260]; // [esp+22Ch] [ebp-30Ch] BYREF
+  char fileName[260]; // [esp+330h] [ebp-208h] BYREF
+  char extension[260]; // [esp+434h] [ebp-104h] BYREF
+  const char VersionString[] = "Game System Character Ver 1.01\n";
+
+  printf("%s", VersionString);
+  customDirResult = CustomDirectoryProcessing();
+  byte_6B2E65 = 1;
+  byte_6B2F74 = customDirResult;
+  _splitpath(FullPath, drivePath, directoryPath, fileName, extension); 
+  _makepath(fullPathBuffer, drivePath, directoryPath, "lights2", ".ncd");
+  
+  CustomDataCopy(fullPathBuffer, ncd_array);
+  // Reset game state variables
+  g_someGameState = 0;
+  g_flag1 = 0;
+  g_flag2 = 0;
+  g_globalTimerValue = (short)CustomAudioControl();
+  
+  // Initialize animation control and set horizontal screen position
+  screenPosHorizontal = (int)InitAnimationControl(hWndParent, 256, 256, 8);
+  
+  ReallocateGlobalResourceArray(17);
+  ReallocateRenderBuffer(600);
+  ReallocateMemoryBuffer(32);
+  return HandleGlobalPalette(NULL) != NULL;
+  processedPixelCount = 0;
+  initAndRunGame();
+  title_bmp_data = 0;
+  psel_bmp_data = 0;
+  tokyo_bmp_data_pointer = 0;
+  title_bmp_data = ProcessAndFindMatchingEntry(TITLE_BMP, 0, 0xFFFFFu, 0);
+    if (title_bmp_data)
+    {
+        title_bmp_data = ProcessBitmapData((int)title_bmp_data, NULL, NULL, &bitmapWidth, &bitmapHeight);
+        psel_bmp_data = ProcessAndFindMatchingEntry(PSEL_BMP, 0, 0xFFFFFu, 0);
+        if (psel_bmp_data)
+        {
+            psel_bmp_data = ProcessBitmapData((int)psel_bmp_data, NULL, NULL, &bitmapWidth, &bitmapHeight);
+            tokyo_bmp_data_pointer = ProcessAndFindMatchingEntry(TOKYO_BMP, 0, 0xFFFFFu, 0);
+            if (tokyo_bmp_data_pointer)
+            {
+                tokyo_bmp_data_pointer = ProcessBitmapData((int)tokyo_bmp_data_pointer, NULL, NULL, &bitmapWidth, &bitmapHeight);
+        if ( bitmapHeight * bitmapWidth > 0 )
+        {
+          do
+          {
+            *tokyoBitmapDataPtr++ -= 76;
+            ++processedPixelCount;
+          }
+          while ( bitmapHeight * bitmapWidth > processedPixelCount );
+        }
+        grad_bmp_data = ProcessAndFindMatchingEntry(GRAD_BMP, 0, 0xFFFFFu, 0);
+    if (grad_bmp_data)
+    {
+        grad_bmp_data = ProcessBitmapData((int)grad_bmp_data, NULL, NULL, &bitmapWidth, &bitmapHeight);
+          for ( pixelIndex = 0; bitmapHeight * bitmapWidth > pixelIndex; ++pixelIndex )
+            *gradBitmapDataPtr++ -= 76;
+        //  LoadSfxFileBundle();
+          showInputDisplay = 0;
+          gametype_enabled = 0;
+          HITSTOP_SLOWDOWN[0] = 0;
+          dword_6B2E08 = 0;
+          dword_688028 = 0;
+          dword_6B2FD4 = 0;
+          dword_6B2BB4 = 80;
+          gfx_spritetrail = 1;
+          gamespeed = 0;
+          option_difficulty_copy = 1;
+          option_difficulty = 1;
+          option_timer = 3600;
+          roundsToWin = 2;
+        //  HandleGameOptionsRegistry();
+          InitializeGameResources();
+          p2_char = 0;
+          gametype_enabled = 2;
+          character[0] = 0;
+          p1_setCPU[0] = 1;
+          p2_setCPU = 1;
+          while ( 2 )
+          {
+            switch ( gametype_enabled )
+            {
+              case 0:
+                gametype_enabled = 2;
+                continue;
+              case 1:
+                nullsub_2();
+                continue;
+              case 2:
+                gameLoopResult = GameLoop();
+                if ( gameLoopResult )
+                {
+                  if ( gameLoopResult == 1 )
+                  {
+                    gametype_enabled = 10;
+                  }
+                  else if ( gameLoopResult == 2 )
+                  {
+                    gametype_enabled = 13;
+                  }
+                }
+                else
+                {
+                  gametype_enabled = 7;
+                }
+                continue;
+              case 3:
+                if ( css_general() == -1 )
+                {
+                  byte_6B2BB9 = 0;
+                  gametype_enabled = 7;
+                }
+                else
+                {
+                  nullsub_1();;
+                  gametype_enabled = 5;
+                }
+                continue;
+              case 4:
+                nullsub_3();
+                gametype_enabled = 0;
+                MainEventLoop();
+                continue;
+              case 5:
+                resourceArrayPointer = hitcount;
+                do
+                {
+                  *resourceArrayPointer = 0;
+                  resourceArrayPointer += 71;
+                }
+                while ( (int)resourceArrayPointer < (int)byte_6B2DFC );
+                MainBattle();
+                gametype_enabled = 0;
+                if ( !p1_setCPU[0] && !p2_setCPU || byte_6B2BB9 == 1 )
+                {
+                  gametype_enabled = 5;
+                  if ( css_general() == -1 )
+                  {
+                    byte_6B2BB9 = 0;
+                    gametype_enabled = 7;
+                  }
+                  else
+                  {
+                    nullsub_1();
+                  }
+                }
+                continue;
+              case 6:
+                mmManualPages();
+                gametype_enabled = 7;
+                continue;
+              case 7:
+              //  audioReset();
+                switch ( mmBgScroll() )
+                {
+                  case 0:
+                    gametype_enabled = 3;
+                    break;
+                  case 1:
+                    gametype_enabled = 9;
+                    byte_6B2BB9 = 0;
+                    break;
+                  case 2:
+                    gametype_enabled = 14;
+                    byte_6B2BB9 = 0;
+                    break;
+                  case 4:
+                    gametype_enabled = 12;
+                    byte_6B2BB9 = 0;
+                    break;
+                  case 5:
+                    p1_setCPU[0] = 0;
+                    byte_6B2BB9 = 0;
+                    gametype_enabled = 3;
+                    p2_setCPU = 0;
+                    break;
+                  case 6:
+                    gametype_enabled = 11;
+                    byte_6B2BB9 = 0;
+                    break;
+                  case 7:
+                    gametype_enabled = 8;
+                    byte_6B2BB9 = 0;
+                    break;
+                  case 8:
+                    gametype_enabled = 6;
+                    break;
+                  case 10:
+                    gametype_enabled = 10;
+                    break;
+                  case 11:
+                    gametype_enabled = 13;
+                    byte_6B2BB9 = 0;
+                    break;
+                  default:
+                    byte_6B2BB9 = 0;
+                    gametype_enabled = 7;
+                    break;
+                }
+                continue;
+              case 8:
+                p1_setCPU[0] = 0;
+                p2_setCPU = 0;
+                if ( css_general() == -1 )
+                {
+                  gametype_enabled = 7;
+                }
+                else
+                {
+                  showInputDisplay = 1;
+                  dword_6B2E08 = 1;
+                  dword_688028 = 1;
+                  dword_6B2FD4 = 1;
+                  MainBattle();
+                  gametype_enabled = 7;
+                  showInputDisplay = 0;
+                  dword_6B2E08 = 0;
+                  dword_688028 = 0;
+                  dword_6B2FD4 = 0;
+                }
+                continue;
+              case 9:
+                if ( css_general() == -1 )
+                {
+                  gametype_enabled = 7;
+                }
+                else
+                {
+                  cpuSetPointer = (short*)p1_health;
+                  do
+                  {
+                    *cpuSetPointer = 96;
+                    cpuSetPointer += 142;
+                    *(cpuSetPointer - 141) = 32;
+                    *(cpuSetPointer - 140) = 96;
+                    *(cpuSetPointer - 148) = 0;
+                    *(cpuSetPointer - 149) = 0;
+                  }
+                  while ( cpuSetPointer < (short*)(&dword_6B2E10 + 1) );
+                  savedOptionTimer = option_timer;
+                  savedRoundsToWin = roundsToWin;
+                  tempOptionDifficultyCopy = option_difficulty_copy;
+                  option_difficulty_copy = 1;
+                  option_difficulty = 1;
+                  option_timer = 5940;
+                  roundsToWin = 1;
+                  *dword_6B2E60 = 0;
+                  MainBattle();
+                  option_timer = savedOptionTimer;
+                  option_difficulty_copy = tempOptionDifficultyCopy;
+                  roundsToWin = savedRoundsToWin;
+                  option_difficulty = tempOptionDifficultyCopy;
+                  gametype_enabled = 7;
+                }
+                continue;
+              case 10:
+                goto LABEL_76;
+              case 11:
+                                if ( css_general() == -1 )
+                {
+                  gametype_enabled = 7;
+                }
+                else if ( p1_setCPU[0] == 1 && p2_setCPU == 1 )
+                {
+                  gametype_enabled = 7;
+                }
+                else
+                {
+                  int gameModeResult;
+                  int battleResult;
+                  short* cpuCharPointer;
+                  int loopTimer;
+
+                  gameModeResult = 0;
+                  battleResult = 0;
+                  cpuCharPointer = (short*)p1_meter_Stocks;
+                  do
+                  {
+                      if ( !*cpuCharPointer )
+                          gameModeResult = battleResult;
+                      cpuCharPointer += 142;
+                      ++battleResult;
+                  }
+                  while ( cpuCharPointer < (short*)(spriteDataLimitArray + 1) );
+                  loopTimer = option_timer;
+                  tempOptionDifficultyCopy = option_difficulty_copy;
+                  dword_6B2E08 = 1;
+                  option_difficulty_copy = 1;
+                  roundsToWin = 1;
+                  dword_6B2E14 = 0;
+                  option_difficulty = 1;
+                  option_timer = 5940;
+                  MainBattle();
+                  option_difficulty_copy = tempOptionDifficultyCopy;
+                  option_timer = loopTimer;
+                  dword_6B2E08 = 0;
+                  option_difficulty = tempOptionDifficultyCopy;
+                  gametype_enabled = 11;
+                  p1_setCPU[142 * gameModeResult] = 0;
+                }
+
+              case 12:
+                p1_setCPU[0] = 0;
+                p2_setCPU = 0;
+                if ( css_general() == -1 )
+                {
+                  gametype_enabled = 7;
+                }
+                else
+                {
+                  p1_setCPU[0] = 1;
+                  p2_setCPU = 1;
+                  MainBattle();
+                  gametype_enabled = 12;
+                }
+                continue;
+              case 13:
+                resetTimer = option_timer;
+                savedRounds = roundsToWin;
+                tempOptionDifficultyCopy = option_difficulty_copy;
+                option_difficulty_copy = 2;
+                option_difficulty = 2;
+                option_timer = 3600;
+                roundsToWin = 2;
+                p1_setCPU[0] = 1;
+                p2_setCPU = 1;
+                MainBattle();
+                option_timer = resetTimer;
+                option_difficulty_copy = tempOptionDifficultyCopy;
+                roundsToWin = savedRounds;
+                option_difficulty = tempOptionDifficultyCopy;
+                gametype_enabled = 7;
+                continue;
+              case 14:
+                gametype_enabled = 14;
+                if ( mmCssTeamBattle() == -1 )
+                {
+                  byte_6B2BB9 = 0;
+                  gametype_enabled = 7;
+                }
+                else
+                {
+                  short* charMeterPointer = (short*)p1_meter_Stocks;
+                  do
+                {
+                    *charMeterPointer = 0;
+                    charMeterPointer += 142;
+                    *(charMeterPointer - 143) = 0;
+                    *(charMeterPointer - 148) = 0;
+                }
+                while ( charMeterPointer < (short*)(&p2_dataLimit + 1) );
+                  savedRoundsTemp = roundsToWin;
+                  roundsToWin = 3;
+                  gameMainLoop();
+                  roundsToWin = savedRoundsTemp;
+                  if ( p1_setCPU[0] == 1 || p2_setCPU == 1 )
+                    gametype_enabled = 7;
+                }
+                continue;
+              default:
+                continue;
+            }
+          }
+        }
+      }
+    }
+  }
+LABEL_76:
+  if ( tokyo_bmp_data_pointer )
+    free(tokyo_bmp_data_pointer);
+  if ( title_bmp_data )
+    free(title_bmp_data);
+  if ( psel_bmp_data )
+    free(psel_bmp_data);
+  return 0;
+}
 
 int initializeResourceHandlers()
 {
@@ -1152,58 +1662,3 @@ void initAndRunGame()
   }
 }
 
-int initGame()
-{
-  char customDirResult; // al
-  int processedPixelCount; // esi
-  // unsigned char *tokyoBitmapDataPtr; // eax
-  // unsigned char *gradBitmapDataPtr; // eax
-  // int pixelIndex; // edx
-  // int gameLoopResult; // eax
-  // int *resourceArrayPointer; // eax
-  // short *cpuSetPointer; // eax
-  // int savedOptionTimer; // esi
-  // int savedRoundsToWin; // edi
-  // int gameModeResult; // edi
-  // int battleResult; // eax
-  // short *cpuCharPointer; // ecx
-  // int loopTimer; // esi
-  // int resetTimer; // esi
-  // int savedRounds; // edi
-  // short *charMeterPointer; // eax
-  // int savedRoundsTemp; // esi
-  // int bitmapWidth; // [esp+10h] [ebp-528h] BYREF
-  // int bitmapHeight; // [esp+14h] [ebp-524h] BYREF
-  // char tempOptionDifficultyCopy; // [esp+18h] [ebp-520h]
-  // int optionDifficultyCopyTemp; // [esp+20h] [ebp-518h]
-  char directoryPath[260]; // [esp+24h] [ebp-514h] BYREF
-  char drivePath[260]; // [esp+128h] [ebp-410h] BYREF
-  char fullPathBuffer[260]; // [esp+22Ch] [ebp-30Ch] BYREF
-  char fileName[260]; // [esp+330h] [ebp-208h] BYREF
-  char extension[260]; // [esp+434h] [ebp-104h] BYREF
-  const char VersionString[] = "Game System Character Ver 1.01\n";
-
-  printf("%s", VersionString);
-  customDirResult = CustomDirectoryProcessing();
-  byte_6B2E65 = 1;
-  byte_6B2F74 = customDirResult;
-  _splitpath(FullPath, drivePath, directoryPath, fileName, extension); 
-  _makepath(fullPathBuffer, drivePath, directoryPath, "lights2", ".ncd");
-  
-  CustomDataCopy(fullPathBuffer, ncd_array);
-  // Reset game state variables
-  g_someGameState = 0;
-  g_flag1 = 0;
-  g_flag2 = 0;
-  g_globalTimerValue = (short)CustomAudioControl();
-  
-  // Initialize animation control and set horizontal screen position
-  screenPosHorizontal = (int)InitAnimationControl(hWndParent, 256, 256, 8);
-  
-  ReallocateGlobalResourceArray(17);
-  ReallocateRenderBuffer(600);
-  ReallocateMemoryBuffer(32);
-  return HandleGlobalPalette(NULL) != NULL;
-  processedPixelCount = 0;
-  initAndRunGame();
-}
