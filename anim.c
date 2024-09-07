@@ -241,21 +241,24 @@ int __stdcall InitAnimations(void)
   return 0;
 }
 
-int InitAnimParams(int frameCount, char isReverse, int totalFrames)
+int InitAnimParams(int frameCount,int isReverse,int totalFrames)
+
 {
-  if ( !g_bitDepth || totalFrames < 2 )
-    return -1;
-  g_frameCount = frameCount;
-  g_totalFrames = totalFrames - 1;
-  g_animationState = 1;
-  g_currentFrame = 0;
-  g_isReverse = isReverse & 1;
-  UpdateAnimationState(2);
-  if ( g_isReverse )
-    g_currentFrame = g_totalFrames;
-  else
+  if ((g_bitDepth != 0) && (1 < totalFrames)) {
+    g_totalFrames = totalFrames + -1;
+    g_frameCount = frameCount;
+    g_animationState = 1;
+    g_currentFrame = 0;
+    g_isReverse = isReverse & 1;
+    UpdateAnimationState(2);
+    if (g_isReverse != 0) {
+      g_currentFrame = g_totalFrames;
+      return 0;
+    }
     g_currentFrame = 1;
-  return 0;
+    return 0;
+  }
+  return -1;
 }
 
 int DisableAnimation()

@@ -19,7 +19,7 @@ extern int g_frameCount;
 
 
 void* InitAnimationControl(HWND hwnd, int width, int height, int bitDepth);
-int InitAnimParams(int frameCount, char isReverse, int totalFrames);
+int InitAnimParams(int frameCount, int isReverse, int totalFrames);
 int __stdcall UpdateAnimationState(int pixelSize);
 int __stdcall InitAnimations(void);
 int DisableAnimation(void); 
