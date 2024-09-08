@@ -3,3 +3,6 @@ asm_main.c
 /out
 /release
 /release
+12mul.c
+aekachar.c
+h.c
