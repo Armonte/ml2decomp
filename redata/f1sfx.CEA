@@ -1,0 +1,51 @@
+[ENABLE]
+alloc(newmem, 1024)       // Allocate memory for our new code
+alloc(cooldownCounter, 4) // Allocate memory for cooldown counter
+label(skip_sound)
+
+newmem:
+  pushad                  // Save all general-purpose registers
+
+  // Check F1 key state
+  cmp byte ptr [0067A118], 0x41  // Compare F1 key state with 0x41 (pressed)
+  jne reset_cooldown            // If not pressed, reset cooldown
+
+  // Check cooldown
+  mov eax, [cooldownCounter]
+  test eax, eax
+  jnz decrement_cooldown
+
+  // Cooldown is 0, play sound
+  push 0x30               // Push 0xD onto the stack
+  push 0x01               // Push 0x1 onto the stack
+  push 0x00               // Push 0x0 onto the stack
+  call 00429900           // Call the function at 00429900
+  add esp, 0x0C           // Clean up the stack after the function call
+
+  // Set cooldown
+  mov dword ptr [cooldownCounter], 30  // Set cooldown to 30 frames (adjust as needed)
+  jmp skip_sound
+
+decrement_cooldown:
+  dec dword ptr [cooldownCounter]
+  jmp skip_sound
+
+reset_cooldown:
+  mov dword ptr [cooldownCounter], 0
+
+skip_sound:
+  popad                   // Restore all general-purpose registers
+  // Execute original instruction that we overwrote
+  ret                     // Original return instruction
+
+// Replace original RET instruction with a jump to our new code
+"00412374":               // Address to inject into
+  jmp newmem              // Jump to our new code
+  nop                     // Fill remaining space if necessary
+
+[DISABLE]
+"00412374":               // Restore the original RET instruction
+  db C3                   // Restore the RET byte
+
+dealloc(newmem)
+dealloc(cooldownCounter)

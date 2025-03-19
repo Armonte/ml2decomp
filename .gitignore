@@ -6,3 +6,6 @@ asm_main.c
 12mul.c
 aekachar.c
 h.c
+/redata/objdiff
+/redata/pointermap
+*.dmp

@@ -1,0 +1,58 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: main - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\stjra\AppData\Local\Temp\RSP57CB.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Release/main.pch" /YX /Fo"Release/" 
+"C:\Users\stjra\Documents\GitHub\ml2decomp\main.c"
+]
+Creating command line "cl.exe @C:\Users\stjra\AppData\Local\Temp\RSP57CB.tmp" 
+<h3>Output Window</h3>
+Compiling...
+main.c
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(34) : warning C4013: 'SetWindowToForegroundIfMinimized' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(42) : warning C4013: 'FindFirstCDromDrive' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(53) : warning C4013: 'regManSaveLoadKeyConfig' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(54) : warning C4013: 'regManCheckLoadSettings' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(64) : warning C4013: 'regManSaveSettingsAndPath' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(75) : warning C4013: 'InitWindowProc' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(82) : warning C4013: 'sound_audiosetup' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(85) : warning C4013: 'audioSetupSong' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(86) : warning C4013: 'regManScore' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(87) : warning C4013: 'regManSurvival' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(88) : warning C4013: 'regManTimeAttack' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(90) : warning C4013: 'initGame' undefined; assuming extern returning int
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(95) : warning C4101: 'i' : unreferenced local variable
+C:\Users\stjra\Documents\GitHub\ml2decomp\main.c(95) : warning C4101: 'dialogResource' : unreferenced local variable
+main.obj : error LNK2001: unresolved external symbol __imp__DestroyWindow@4
+main.obj : error LNK2001: unresolved external symbol _initGame
+main.obj : error LNK2001: unresolved external symbol _regManTimeAttack
+main.obj : error LNK2001: unresolved external symbol _regManSurvival
+main.obj : error LNK2001: unresolved external symbol _regManScore
+main.obj : error LNK2001: unresolved external symbol _audioSetupSong
+main.obj : error LNK2001: unresolved external symbol _sound_audiosetup
+main.obj : error LNK2001: unresolved external symbol _InitWindowProc
+main.obj : error LNK2001: unresolved external symbol _SetWindowToForegroundIfMinimized
+main.obj : error LNK2001: unresolved external symbol _regManSaveSettingsAndPath
+main.obj : error LNK2001: unresolved external symbol __imp__DialogBoxParamA@20
+main.obj : error LNK2001: unresolved external symbol _IDD_BOOT
+main.obj : error LNK2001: unresolved external symbol _DialogFunc@16
+main.obj : error LNK2001: unresolved external symbol _regManCheckLoadSettings
+main.obj : error LNK2001: unresolved external symbol _regManSaveLoadKeyConfig
+main.obj : error LNK2001: unresolved external symbol _FindFirstCDromDrive
+main.obj : error LNK2001: unresolved external symbol __imp__InitCommonControls@0
+main.exe : fatal error LNK1120: 17 unresolved externals
+Error executing cl.exe.
+
+
+
+<h3>Results</h3>
+main.obj - 18 error(s), 14 warning(s)
+</pre>
+</body>
+</html>

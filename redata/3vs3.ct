@@ -4868,6 +4868,205 @@
       <VariableType>4 Bytes</VariableType>
       <Address>006B2C7E</Address>
     </CheatEntry>
+    <CheatEntry>
+      <ID>1007</ID>
+      <Description>"keystate W (up)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0FF</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1009</ID>
+      <Description>"keystate A (left)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0E9</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1008</ID>
+      <Description>"keystate S (down)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0FB</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1006</ID>
+      <Description>"keystate D (right)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0EC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1013</ID>
+      <Description>"keystate T (light C0)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0FC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1012</ID>
+      <Description>"r 2"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0FA</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1011</ID>
+      <Description>"keystate T (light)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0FC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1019</ID>
+      <Description>"keystate u"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0FD</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1014</ID>
+      <Description>"keystate h"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0F0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1015</ID>
+      <Description>"keystate j"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0F2</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1016</ID>
+      <Description>"keystate k"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0F3</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1017</ID>
+      <Description>"keystate o"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0F7</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1018</ID>
+      <Description>"keystate p"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>0067A0F8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1020</ID>
+      <Description>"No description"</Description>
+      <VariableType>Double</VariableType>
+      <Address>21C178F7D90</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1021</ID>
+      <Description>"No description"</Description>
+      <VariableType>Double</VariableType>
+      <Address>21C5F82EE10</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1022</ID>
+      <Description>"No description"</Description>
+      <VariableType>Double</VariableType>
+      <Address>21C178F7DC0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1023</ID>
+      <Description>"No description"</Description>
+      <VariableType>Double</VariableType>
+      <Address>21C2D83BF90</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1024</ID>
+      <Description>"No description"</Description>
+      <VariableType>Double</VariableType>
+      <Address>21CA67FCC10</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1025</ID>
+      <Description>"No description"</Description>
+      <VariableType>Byte</VariableType>
+      <Address>0019D6B0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1026</ID>
+      <Description>"No description"</Description>
+      <VariableType>Byte</VariableType>
+      <Address>0019D94C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1027</ID>
+      <Description>"No description"</Description>
+      <VariableType>Byte</VariableType>
+      <Address>0019F85C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1028</ID>
+      <Description>"No description"</Description>
+      <VariableType>Byte</VariableType>
+      <Address>0019F964</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1029</ID>
+      <Description>"No description"</Description>
+      <VariableType>Byte</VariableType>
+      <Address>0019F98C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1032</ID>
+      <Description>"com text pal"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>00414A8E</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1030</ID>
+      <Description>"community text ypos"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>00414A94</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1031</ID>
+      <Description>"community text xpos"</Description>
+      <ShowAsSigned>1</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>00414A99</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1033</ID>
+      <Description>"No description"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>00B2BFAA</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1034</ID>
+      <Description>"comtext unk"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>00414A90</Address>
+    </CheatEntry>
   </CheatEntries>
   <CheatCodes>
     <CodeEntry>
@@ -7075,6 +7274,371 @@
         <Byte>49</Byte>
         <Byte>00</Byte>
         <Byte>66</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Code :push 00updates titlescreen menu item</Description>
+      <AddressString>3vs3.exe+14A12</AddressString>
+      <Before>
+        <Byte>0E</Byte>
+        <Byte>6A</Byte>
+        <Byte>0A</Byte>
+        <Byte>6A</Byte>
+        <Byte>01</Byte>
+      </Before>
+      <Actual>
+        <Byte>6A</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>E7</Byte>
+        <Byte>4E</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of dec esi</Description>
+      <AddressString>3vs3.exe+14B04</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>0C</Byte>
+        <Byte>C4</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </Before>
+      <Actual>
+        <Byte>4E</Byte>
+      </Actual>
+      <After>
+        <Byte>75</Byte>
+        <Byte>F3</Byte>
+        <Byte>E8</Byte>
+        <Byte>94</Byte>
+        <Byte>D8</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of cmp edi,00000708</Description>
+      <AddressString>3vs3.exe+14AA9</AddressString>
+      <Before>
+        <Byte>74</Byte>
+        <Byte>02</Byte>
+        <Byte>33</Byte>
+        <Byte>FF</Byte>
+        <Byte>47</Byte>
+      </Before>
+      <Actual>
+        <Byte>81</Byte>
+        <Byte>FF</Byte>
+        <Byte>08</Byte>
+        <Byte>07</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>7F</Byte>
+        <Byte>25</Byte>
+        <Byte>F7</Byte>
+        <Byte>C5</Byte>
+        <Byte>60</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of inc edi</Description>
+      <AddressString>3vs3.exe+14AA8</AddressString>
+      <Before>
+        <Byte>ED</Byte>
+        <Byte>74</Byte>
+        <Byte>02</Byte>
+        <Byte>33</Byte>
+        <Byte>FF</Byte>
+      </Before>
+      <Actual>
+        <Byte>47</Byte>
+      </Actual>
+      <After>
+        <Byte>81</Byte>
+        <Byte>FF</Byte>
+        <Byte>08</Byte>
+        <Byte>07</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+1DA80 NOP HANDLECLASH</Description>
+      <AddressString>3vs3.exe+1FE78</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>F8</Byte>
+        <Byte>74</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>03</Byte>
+        <Byte>DC</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>9E</Byte>
+        <Byte>64</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+1DA80 NOP Handle clash</Description>
+      <AddressString>3vs3.exe+1EC9C</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>D4</Byte>
+        <Byte>86</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>DF</Byte>
+        <Byte>ED</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>7A</Byte>
+        <Byte>76</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+236E0 nop update entities</Description>
+      <AddressString>3vs3.exe+1EC83</AddressString>
+      <Before>
+        <Byte>8C</Byte>
+        <Byte>01</Byte>
+        <Byte>4C</Byte>
+        <Byte>00</Byte>
+        <Byte>01</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>58</Byte>
+        <Byte>4A</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>63</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+214F0 nop entity collisions</Description>
+      <AddressString>3vs3.exe+1EC88</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>58</Byte>
+        <Byte>4A</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>63</Byte>
+        <Byte>28</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>3E</Byte>
+        <Byte>A6</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+292D0 nop Update Timers</Description>
+      <AddressString>3vs3.exe+1EC8D</AddressString>
+      <Before>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>3E</Byte>
+        <Byte>A6</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>D9</Byte>
+        <Byte>EB</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+27370 nop ConstrainPlayerToStageBoundaries_todo</Description>
+      <AddressString>3vs3.exe+1EC97</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>D9</Byte>
+        <Byte>EB</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>D4</Byte>
+        <Byte>86</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+25810nop processplayerstate</Description>
+      <AddressString>3vs3.exe+1ECA6</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>7A</Byte>
+        <Byte>76</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>65</Byte>
+        <Byte>6B</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>70</Byte>
+        <Byte>5E</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+24B20nop process gamestate</Description>
+      <AddressString>3vs3.exe+1ECAB</AddressString>
+      <Before>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>70</Byte>
+        <Byte>5E</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>2B</Byte>
+        <Byte>5E</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+24AE0 nop resetPlayer</Description>
+      <AddressString>3vs3.exe+1ECB0</AddressString>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>70</Byte>
+        <Byte>5E</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>2B</Byte>
+        <Byte>5E</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E8</Byte>
+        <Byte>A6</Byte>
+        <Byte>93</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+28060 nop player and round</Description>
+      <AddressString>3vs3.exe+1ECB5</AddressString>
+      <Before>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>A6</Byte>
+        <Byte>93</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>C7</Byte>
+        <Byte>05</Byte>
+        <Byte>30</Byte>
+        <Byte>85</Byte>
+        <Byte>68</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of call 3vs3.exe+23B70 nop handle character state</Description>
+      <AddressString>3vs3.exe+1EC64</AddressString>
+      <Before>
+        <Byte>82</Byte>
+        <Byte>18</Byte>
+        <Byte>2C</Byte>
+        <Byte>6B</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>07</Byte>
+        <Byte>4F</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>FF</Byte>
+        <Byte>05</Byte>
+        <Byte>F8</Byte>
+        <Byte>2D</Byte>
+        <Byte>6B</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
